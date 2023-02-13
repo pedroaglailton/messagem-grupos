@@ -1,0 +1,88 @@
+ :root {
+            --grey-color: #0d1117;
+            --wpp-green: #0dc143;
+        }
+        * {
+            margin: auto;
+            padding: 0;
+        }
+        html,
+        body {
+            width: 100%;
+            height: 100vh;
+            box-sizing: border-box;
+            background-color: var(--grey-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+			margin:30;
+        }
+        #mainContainer {
+            max-width: 600px;
+            width: 100%;
+            border-radius: 12px;
+            background-color: #fff;
+            padding: 10px;
+        }
+        input {
+            width: 100%;
+            height: 20PX;
+            outline: 0;
+        }
+        .submitContainer {
+            width: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        input[type=submit] {
+            width: 600%;
+            height: 30px;
+            margin: 20px 0 0 0;
+            background-color: var(--wpp-green);
+            color: #fff;
+            border: 0;
+            cursor: pointer;
+        }
+        input[type=submit]:hover {
+            background-color: #0dc143d1;
+        }
+        textarea {
+            width: 50%;
+            height: 60px;
+            outline: 5;
+        }
+        .textArea {
+            margin: 8px 0 0 0;
+        }
+        label {
+            display: block;
+            margin: 10px 0 0 0;
+        }
+		#map {
+	width: 100%;
+	height: 400px;
+}
+.box{
+	border:0px;
+}
+.status{
+	background:#bbb;
+	color:#fff;
+	padding: 5px;
+	border-radius:5px;
+}
+.status.success{background:#23c859}
+.status.danger{background:#e2342a}
+
+.table tr:first-child th,
+.table tr:first-child td{
+	border-top:none;
+}
+.table tr:last-child th,
+.table tr:last-child td{
+	border-bottom: 1px solid #ddd !important;
+}
+.alert-danger{
+	margin-top:20px;
+}
