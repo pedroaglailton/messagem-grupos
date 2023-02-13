@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fechamento de Chamado Whatsapp</title>
+	<link href="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css" rel="stylesheet" />
+    <style>
+        :root {
+            --grey-color: #0d1117;
+            --wpp-green: #0dc143;
+        }
+        * {
+            margin: auto;
+            padding: 0;
+        }
+        html,
+        body {
+            width: 100%;
+            height: 100vh;
+            box-sizing: border-box;
+            background-color: var(--grey-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+			margin:30;
+        }
+        #mainContainer {
+            max-width: 600px;
+            width: 100%;
+            border-radius: 12px;
+            background-color: #fff;
+            padding: 10px;
+        }
+        input {
+            width: 100%;
+            height: 20PX;
+            outline: 0;
+        }
+        .submitContainer {
+            width: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        input[type=submit] {
+            width: 600%;
+            height: 30px;
+            margin: 20px 0 0 0;
+            background-color: var(--wpp-green);
+            color: #fff;
+            border: 0;
+            cursor: pointer;
+        }
+        input[type=submit]:hover {
+            background-color: #0dc143d1;
+        }
+        textarea {
+            width: 50%;
+            height: 60px;
+            outline: 5;
+        }
+        .textArea {
+            margin: 8px 0 0 0;
+        }
+        label {
+            display: block;
+            margin: 10px 0 0 0;
+        }
+		#map {
+	width: 100%;
+	height: 400px;
+}
+.box{
+	border:0px;
+}
+.status{
+	background:#bbb;
+	color:#fff;
+	padding: 5px;
+	border-radius:5px;
+}
+.status.success{background:#23c859}
+.status.danger{background:#e2342a}
+
+.table tr:first-child th,
+.table tr:first-child td{
+	border-top:none;
+}
+.table tr:last-child th,
+.table tr:last-child td{
+	border-bottom: 1px solid #ddd !important;
+}
+.alert-danger{
+	margin-top:20px;
+}
+    </style>
+</head>
+<body>
+    <main id="mainContainer">
+        <form action="#" method="get" class="mainForm" onsubmit="abrirWhatsapp()">
+		<div>
+                <label >IPQ TECNOLOGIA - FORMULARIO DE ATENDIMENTO</label>
+				</div>
+		<div>
+                <label for="informarNumero">Status do GPS . coordenadas de sua possição autual.</label><br>
+                <span id="geolocation_status" class="status">Checando...</span>	
+            </div> 
+			 <div>
+                <label for="informarNumero">Informe seu número</label>
+                <input type="tel" name="" id="informarNumero" maxlength="11" placeholder="Ex. 85988888888">
+            </div>
+            <div>
+                <label for="informarPolo">Polo Atendido<label>
+                <input type="text" id="informarpolo" placeholder="Informe seu polo de trabalho">
+            </div>
+			<div>
+                <label for="informarNoc">Informe Atendimento do NOC</label>
+                <input type="text" id="informarNoc" placeholder="Informe quem te atendeu no Noc">
+            </div>
+            <div>
+                <label for="informardate">Data do Chamado</label>
+                <input type="date" name="" id="informardate" placeholder="Informe data">
+			 </div>
+			 <div>
+                <label for="informarhora">Hora do Lancamento : </label>
+                <input type="text" name="" id="informarhora" placeholder="Informe Hora do Chamado">
+			 </div>
+			 <div>
+                <label for="informarnumerochamado">Numero do Chamado: </label>
+                <input type="text" name="" id="informarnumerochamado" placeholder="Informe numero do Chamado">
+			 </div>
+            <div class="textArea">
+                <label for="informarMensagem">Descriçao do Chamado :</label>
+                <textarea name="" id="informarMensagem" cols="1" rows="5"></textarea>
+            </div>
+			<div>
+                <label for="informartecnico">Tecnicos:</label>
+                <input type="text" name="" id="informartecnico" placeholder="Informe o(s) Tecnicos">
+            </div>
+			<div>
+                <label for="informardatatendimento">Data e hora do Atendimeno:</label>
+                <input type="datetime-local" name="" id="informardatatendimento" placeholder="Informe data">
+			 </div>
+			 <div class="textArea">
+                <label for="informarMensagem1">Descriçao do Atendimento coloque aqui alguma observacao:</label>
+                <textarea name="" id="informarMensagem1" cols="1" rows="5"></textarea>
+            </div>
+			<label for="informarNumero">Informe o número do registro da ENEL:</label>
+                <input type="tel" name="" id="informarNumero" placeholder="Informe numero RG da ENEL">
+			<div>
+                <input type="hidden" id="latitude" value ="">
+            </div>
+			<div>
+                <input type="hidden" id="longitude" value ="">
+            </div>
+            <div class="submitContainer">
+                <input type="submit" value="Enviar dados">
+            </div>
+			<div>
+                <label >Pedro Aglailton-2023</label>
+				</div>
+        </form>
+    </main>
+	<script>
+function run(){
+
+	function getLocation() {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(showPosition, showError);
+		} else {
+			showError('NOT_SUPPORTED');
+			alert('Geolocation is not supported by this browser.');
+		}
+	}
+
+	function showPosition(position) {
+
+		var lat = position.coords.latitude;
+		var lng = position.coords.longitude;
+
+		$('.alert-danger').hide();
+		$('#latitude').val(lat) 
+		$('#longitude').val(lng);
+		$('#geolocation_status').removeClass('danger').addClass('success').text('Ligado');
+
+		mapboxgl.accessToken = 'pk.eyJ1IjoiZmVybmFuZG9hcGkiLCJhIjoiY2twMDdpbmxzMHE1NjJvcHJydTU5czZ1bSJ9.SOuvu-77prFd_DbxSigpoA';
+		var map = new mapboxgl.Map({
+			container: 'map',
+			style: 'mapbox://styles/mapbox/outdoors-v11',
+			center: [lng, lat],
+			zoom: 12,
+		});
+
+		var marker = new mapboxgl.Marker()
+			.setLngLat([lng, lat])
+			.addTo(map);
+
+		var latlon = {lat:position.coords.latitude, lng:position.coords.longitude};
+		var mapOptions = {
+		 center: latlon,
+		zoom: 14,
+		mapTypeControl:false,
+		mapTypeId: google.maps.MapTypeId.ROADMAP
+		};
+
+		var map=new google.maps.Map(document.getElementById('googleMap'), mapOptions);
+		var marker=new google.maps.Marker({position:latlon,map:map,title:"You are here!"});
+	}
+
+	function showError(error) {
+
+		var msg='';
+
+		if(error=='NOT_SUPPORTED'){
+			msg = 'A geolocalização não é suportada por este navegador.';
+			return;
+		}
+
+		switch(error.code) {
+			case error.PERMISSION_DENIED:
+				msg = "Solicitação de geolocalização negada."
+				break;
+			case error.POSITION_UNAVAILABLE:
+				msg = "Localização indisponível."
+				break;
+			case error.TIMEOUT:
+				msg = "A solicitação para obter a localização atingiu o tempo limite."
+				break;
+			case error.UNKNOWN_ERROR:
+				msg = "Erro desconhecido."
+				break;
+		}
+
+		$('.alert-danger').text(msg).show();
+		$('#geolocation_status').removeClass('success').addClass('danger').text('Desligado');
+	}
+
+	getLocation();
+}
+</script>
+	</main>		
+	<script src="https://cdn.invertexto.com/js/app-v1.2.js"></script>
+	<script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
+	<script>
+	if (typeof run === "function") { 
+    	run();
+	}
+	</script>
+
+    <script>
+        function abrirWhatsapp() {
+            const polo = document.querySelector('#informarpolo').value;
+            const noc = document.querySelector('#informarNoc').value;
+            const data = document.querySelector('#informardate').value;
+			const hora = document.querySelector('#informarhora').value;
+			const Chamado = document.querySelector('#informarnumerochamado').value;
+			const Tecnico = document.querySelector('#informartecnico').value;
+			const DataAtendimento = document.querySelector('#informardatatendimento').value;
+			const telefone = document.querySelector('#informarNumero').value;
+            const mensagem = document.querySelector('#informarMensagem').value;
+			const mensagem1 = document.querySelector('#informarMensagem1').value;
+			const latitude = document.querySelector('#latitude').value;
+			const longitude = document.querySelector('#longitude').value;
+            let url = "https://wa.me/55" + telefone + "?text="
+                + "*MANUTENÇÃO CEARÁ*" + "%0a"
+                + "%0a"
+                + "*Polo Atendido*: " + polo + "%0a" 
+                + "*Data do Chamado*: " + data + "%0a"
+				+ "*Hora de Lancamento*: " + hora + "%0a"
+				+ "*Numero do Chamado*: " + Chamado + "%0a"
+				+ "*Descricao do Chamado*: " + mensagem + "%0a"
+				+ "%0a"
+				+ "*Tecnicos*: " + Tecnico + "%0a"
+				+ "*Data e Hora de Atendimento*: " + DataAtendimento + "%0a"
+				+ "*Descricao do Atendimento*: " + mensagem1 +"%0a"
+              	+ "*Registro da ENEL*: " + telefone + "%0a"
+				+ "%0a"
+				+ "*Sua Latitude*: " + latitude + "%0a"
+				+ "*Sua Longitude*: " + longitude + "%0a"
+				+ "%0a"
+				+ "*Atendimenmto no NOC*: " + noc + "%0a"
+				+ "%0a"
+               	+ "*Supervisores:*@Lucas Ipq - @Carlos Noc "
+				+ "%0a"
+				+ "%0a"
+               	+ "*IPQ TECNOLOGIA*";
+				
+            window.open(url, '_blank').focus();
+        }
+    </script>
+	
+</body>
+</html>
